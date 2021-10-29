@@ -27,7 +27,7 @@
 
 #if NOT_TARGET(__STM32F1__, STM32F1xx)
   #error "Oops! Select a STM32F1 board in 'Tools > Board.'"
-#elif HOTENDS > 1 || E_STEPPERS > 1
+#elif HAS_MULTI_HOTEND || E_STEPPERS > 1
   #error "Longer3D only supports one hotend / E-stepper. Comment out this line to continue."
 #endif
 
@@ -135,12 +135,18 @@
 
   #define TFT_RESET_PIN                     PC4   // pin 33
   #define TFT_BACKLIGHT_PIN                 PD12  // pin 59
+  #define TFT_BACKLIGHT_PWM                 150   // Brightness with alt. TIM4 chan 1 (1-255)
 
   #define DOGLCD_MOSI                       -1    // Prevent auto-define by Conditionals_post.h
   #define DOGLCD_SCK                        -1
 
   // Buffer for Color UI
   #define TFT_BUFFER_SIZE                   3200
+#endif
+
+#if defined(TFT_BACKLIGHT_PWM) && !defined(MAPLE_STM32F1)
+  #define HAS_LCD_BRIGHTNESS 1
+  #define DEFAULT_LCD_BRIGHTNESS TFT_BACKLIGHT_PWM
 #endif
 
 #if ENABLED(SDIO_SUPPORT)
